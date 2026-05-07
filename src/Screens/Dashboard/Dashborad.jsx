@@ -5,7 +5,7 @@ import List from "../../components/List/List";
 
 const Dashborad = () => {
     const { darkMode } = useTheme();
-    const [openModel, setOpenModel] = useState(false);
+    const [model, setModel] = useState(false);
 
     return (
         <div className="px-5 py-2.5 lg:px-40 lg:py-5">
@@ -14,12 +14,10 @@ const Dashborad = () => {
                     shadow-[0_5px_15px_rgba(0,0,0,0.35)]
                     ${darkMode ? "bg-[rgb(23,20,20)] text-white border-2"
                         : "bg-[whitesmoke] text-[rgb(40,40,40)]"}`}
-                    onClick={() => setOpenModel(true)}
+                    onClick={() => setModel(true)}
                 >
                     Add +
                 </div>
-
-                {openModel && <Model />}
 
                 <div className="flex items-center gap-2.5 flex-wrap text-white *:uppercase
                 *:px-1.25 *:py-px *:border-2 *:border-black *:rounded-[5px] *:cursor-pointer">
@@ -31,40 +29,42 @@ const Dashborad = () => {
 
             <div className="mt-10 flex flex-col gap-5">
                 {
-                    tasks.map(({ task, priority, date }, idx) => (
+                    items.map(({ title, priority, date }, idx) => (
                         <List
                             key={idx}
-                            task={task}
+                            title={title}
                             priority={priority}
                             date={date}
                         />
                     ))
                 }
             </div>
+
+            {model && <Model darkMode={darkMode} setModel={setModel} />}
         </div>
     )
 }
 
 export default Dashborad;
 
-const tasks = [
+const items = [
     {
-        task: "Complete React project at 10 AM",
+        title: "Complete React project at 10 AM",
         priority: "high",
         date: "06-05-2026"
     },
     {
-        task: "Practice JavaScript loops at 2 PM",
+        title: "Practice JavaScript loops at 2 PM",
         priority: "medium",
         date: "06-05-2026"
     },
     {
-        task: "Update resume at 4 PM",
+        title: "Update resume at 4 PM",
         priority: "high",
         date: "06-05-2026"
     },
     {
-        task: "Watch coding tutorials at 6 PM",
+        title: "Watch coding tutorials at 6 PM",
         priority: "low",
         date: "06-05-2026"
     }
