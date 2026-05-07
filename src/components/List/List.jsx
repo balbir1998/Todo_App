@@ -2,7 +2,7 @@ import { useTheme } from './../../utils/ContextAPI';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const List = ({ task, priority, date }) => {
+const List = ({ title, priority, date }) => {
     const { darkMode } = useTheme();
 
     return (
@@ -13,7 +13,7 @@ const List = ({ task, priority, date }) => {
                     : "bg-white text-black"}`}
         >
             <div className="max-w-[80%] flex flex-col md:flex-row items-start md:items-center gap-2.5 text-[20px]">
-                <span>{task}</span>
+                <span>{title}</span>
                 <span className={`uppercase px-1.25 py-px rounded-[5px] text-white text-[16px] font-bold ${priority}`}>
                     {priority}
                 </span>
