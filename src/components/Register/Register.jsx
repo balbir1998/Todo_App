@@ -6,7 +6,7 @@ import { useState } from 'react';
 const Register = () => {
     const { darkMode } = useTheme();
 
-    const [formData, setFormData] = useState({
+    const [newUser, setNewUser] = useState({
         name: "",
         email: "",
         password: ""
@@ -19,7 +19,7 @@ const Register = () => {
     const handleInputField = (e) => {
         const { id, value } = e.target;
 
-        setFormData(prevState => ({ ...prevState, [id]: value }));
+        setNewUser(prevState => ({ ...prevState, [id]: value }));
     }
 
     return (
@@ -35,7 +35,7 @@ const Register = () => {
                     type="text"
                     id="name"
                     placeholder="Full Name"
-                    value={formData.name}
+                    value={newUser.name}
                     onChange={handleInputField}
                 />
 
@@ -43,7 +43,7 @@ const Register = () => {
                     type="email"
                     id="email"
                     placeholder="Email"
-                    value={formData.email}
+                    value={newUser.email}
                     onChange={handleInputField}
                 />
 
@@ -51,7 +51,7 @@ const Register = () => {
                     type="password"
                     id="password"
                     placeholder="Password"
-                    value={formData.password}
+                    value={newUser.password}
                     onChange={handleInputField}
                 />
 
