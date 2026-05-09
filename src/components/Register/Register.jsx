@@ -1,19 +1,40 @@
 import InputField from './../InputField/InputField';
-import { useTheme } from './../../utils/ContextAPI';
+import { useTheme } from './../../utils/ThemeContext';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { db, auth } from './../../utils/firebaseConfig';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
     const { darkMode } = useTheme();
-
     const [newUser, setNewUser] = useState({
         name: "",
         email: "",
         password: ""
     });
+    const navigate = useNavigate();
 
-    const registerUser = (e) => {
+
+    const registerUser = async (e) => {
         e.preventDefault();
+        const { name, email, password } = newUser;
+
+        try {
+            const userCred = await createUserWithEmailAndPassword(auth, email, password);
+            const { user } = userCred;
+
+            await updateProfile(user, {
+                displayName: name
+            });
+
+            alert("user registered successfully");
+            navigate("/dashboard");
+
+        } catch (err) {
+            console.error(err);
+            alert(err.message);
+        }
     }
 
     const handleInputField = (e) => {
