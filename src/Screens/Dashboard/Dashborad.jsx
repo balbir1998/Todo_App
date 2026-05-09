@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useTheme } from "../../utils/ContextAPI";
+import { useTheme } from "../../utils/ThemeContext";
 import Model from "../../components/Model/Model";
 import List from "../../components/List/List";
 
