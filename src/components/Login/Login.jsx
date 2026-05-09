@@ -1,17 +1,34 @@
-import { useTheme } from "../../utils/ContextAPI";
+import { useTheme } from "../../utils/ThemeContext";
 import InputField from "../InputField/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../utils/firebaseConfig";
 
 const Login = () => {
     const { darkMode } = useTheme();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const naivgate = useNavigate();
 
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
+        if (!email.trim() || !password.trim()) {
+            alert("Please fill email and password");
+            return;
+        }
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+
+            alert("Login successfully");
+            naivgate("/dashboard");
+        } catch (err) {
+            console.error(err);
+            alert(err.message);
+        }
 
         navigate("/dashboard");
     }
