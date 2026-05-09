@@ -1,4 +1,4 @@
-import { useTheme } from './../../utils/ContextAPI';
+import { useTheme } from './../../utils/ThemeContext';
 
 const InputField = ({ type, id, placeholder, value, onChange }) => {
     const { darkMode } = useTheme();
