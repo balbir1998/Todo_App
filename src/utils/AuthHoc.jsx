@@ -1,10 +1,11 @@
+import Loader from "../components/Loader/Loader";
 import { useAuth } from "./AuthContext"
 import { Navigate } from 'react-router-dom';
 
 const AuthHoc = ({ children }) => {
     const { user, loading } = useAuth();
 
-    if (loading) return <h1>Loading....</h1>;
+    if (loading) return <Loader />
 
     if (user) return children;
 
