@@ -1,11 +1,52 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from "../../utils/ThemeContext";
 import Model from "../../components/Model/Model";
 import List from "../../components/List/List";
+import { db } from "../../utils/firebaseConfig";
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { useAuth } from './../../utils/AuthContext';
+import { BounceLoader } from 'react-spinners';
+import ListShimmer from './../../components/ShimmerEffect/ListShimmer';
 
 const Dashborad = () => {
     const { darkMode } = useTheme();
+    const [data, setData] = useState([]);
     const [model, setModel] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [editData, setEditData] = useState(null);
+    const { user } = useAuth();
+
+    const fetchData = async () => {
+        if (!loading) setLoading(true);
+        if (data.length) setData([]);
+
+        const listsRef = collection(db, "lists")
+        const q = query(listsRef, where("addedBy", "==", user.uid));
+
+        try {
+            const snapshot = await getDocs(q);
+
+            if (snapshot.empty) {
+                throw new Error("list is empty");
+            };
+
+            const lists = snapshot.docs.map(doc => {
+                const { title, date, priority } = doc.data();
+
+                return { title, date, priority, id: doc.id };
+            });
+
+            setData(lists);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     return (
         <div className="px-5 py-2.5 lg:px-40 lg:py-5">
@@ -27,45 +68,52 @@ const Dashborad = () => {
                 </div>
             </div>
 
-            <div className="mt-10 flex flex-col gap-5">
-                {
-                    items.map(({ title, priority, date }, idx) => (
-                        <List
-                            key={idx}
-                            title={title}
-                            priority={priority}
-                            date={date}
-                        />
-                    ))
-                }
-            </div>
 
-            {model && <Model darkMode={darkMode} setModel={setModel} />}
+            {
+                loading && (
+                    <ListShimmer />
+                )
+            }
+
+            {
+                (data.length === 0 && !loading) && (
+                    <h1 className={`text-center text-3xl mt-10 ${darkMode ? "bg-black text-white" : ""}`}>
+                        No items to do
+                    </h1>
+                )
+            }
+
+            {data.length !== 0 && (
+                <div className="mt-10 flex flex-col gap-5">
+                    {
+                        data.map(({ id, title, priority, date }, idx) => (
+                            <List
+                                id={id}
+                                key={idx}
+                                title={title}
+                                priority={priority}
+                                date={date}
+                                fetchData={fetchData}
+                                setModel={setModel}
+                                setEditData={setEditData}
+                                data={{ id, title, priority, date }}
+                            />
+                        ))
+                    }
+                </div>
+            )}
+
+            {model && (
+                <Model
+                    darkMode={darkMode}
+                    setModel={setModel}
+                    fetchData={fetchData}
+                    editData={editData}
+                    setEditData={setEditData}
+                />
+            )}
         </div>
     )
 }
 
 export default Dashborad;
-
-const items = [
-    {
-        title: "Complete React project at 10 AM",
-        priority: "high",
-        date: "06-05-2026"
-    },
-    {
-        title: "Practice JavaScript loops at 2 PM",
-        priority: "medium",
-        date: "06-05-2026"
-    },
-    {
-        title: "Update resume at 4 PM",
-        priority: "high",
-        date: "06-05-2026"
-    },
-    {
-        title: "Watch coding tutorials at 6 PM",
-        priority: "low",
-        date: "06-05-2026"
-    }
-];
