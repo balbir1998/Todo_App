@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { db, auth } from './../../utils/firebaseConfig';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useNavigate } from "react-router-dom";
+import Loader from './../Loader/Loader';
 
 const Register = () => {
     const { darkMode } = useTheme();
@@ -13,12 +14,15 @@ const Register = () => {
         email: "",
         password: ""
     });
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
 
     const registerUser = async (e) => {
         e.preventDefault();
         const { name, email, password } = newUser;
+
+        setLoading(true);
 
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
@@ -28,12 +32,13 @@ const Register = () => {
                 displayName: name
             });
 
-            alert("user registered successfully");
             navigate("/dashboard");
 
         } catch (err) {
             console.error(err);
             alert(err.message);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -44,49 +49,52 @@ const Register = () => {
     }
 
     return (
-        <div className="px-4 py-5 flex justify-center items-center">
-            <form
-                onSubmit={registerUser}
-                className={`max-w-100 w-full my-25 p-5 shadow-[0_5px_15px_rgba(0,0,0,0.35)]
+        <>
+            {loading && <Loader />}
+            <div className="px-4 py-5 flex justify-center items-center">
+                <form
+                    onSubmit={registerUser}
+                    className={`max-w-100 w-full my-25 p-5 shadow-[0_5px_15px_rgba(0,0,0,0.35)]
                   rounded-[10px] ${darkMode ? "bg-white text-black" : "bg-black text-white"}`}
-            >
-                <h2 className="mb-3 text-lg font-medium">Register</h2>
-
-                <InputField
-                    type="text"
-                    id="name"
-                    placeholder="Full Name"
-                    value={newUser.name}
-                    onChange={handleInputField}
-                />
-
-                <InputField
-                    type="email"
-                    id="email"
-                    placeholder="Email"
-                    value={newUser.email}
-                    onChange={handleInputField}
-                />
-
-                <InputField
-                    type="password"
-                    id="password"
-                    placeholder="Password"
-                    value={newUser.password}
-                    onChange={handleInputField}
-                />
-
-                <button className={`w-full rounded-[10px] p-3.75 text-lg tracking-wider
-                       font-medium cursor-pointer ${darkMode ? "bg-black text-white" : "bg-white text-black"}`}
                 >
-                    Register
-                </button>
+                    <h2 className="mb-3 text-lg font-medium">Register</h2>
 
-                <Link to="/" className="mt-2 inline-block hover:underline underline-offset-2">
-                    Already Registered? Login Now.
-                </Link>
-            </form>
-        </div>
+                    <InputField
+                        type="text"
+                        id="name"
+                        placeholder="Full Name"
+                        value={newUser.name}
+                        onChange={handleInputField}
+                    />
+
+                    <InputField
+                        type="email"
+                        id="email"
+                        placeholder="Email"
+                        value={newUser.email}
+                        onChange={handleInputField}
+                    />
+
+                    <InputField
+                        type="password"
+                        id="password"
+                        placeholder="Password"
+                        value={newUser.password}
+                        onChange={handleInputField}
+                    />
+
+                    <button className={`w-full rounded-[10px] p-3.75 text-lg tracking-wider
+                       font-medium cursor-pointer ${darkMode ? "bg-black text-white" : "bg-white text-black"}`}
+                    >
+                        Register
+                    </button>
+
+                    <Link to="/" className="mt-2 inline-block hover:underline underline-offset-2">
+                        Already Registered? Login Now.
+                    </Link>
+                </form>
+            </div>
+        </>
     )
 }
 
