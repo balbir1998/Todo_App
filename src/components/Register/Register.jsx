@@ -51,10 +51,10 @@ const Register = () => {
     return (
         <>
             {loading && <Loader />}
-            <div className="px-4 py-5 flex justify-center items-center">
+            <div className="px-4 mt-20 flex justify-center items-center">
                 <form
                     onSubmit={registerUser}
-                    className={`max-w-100 w-full my-25 p-5 shadow-[0_5px_15px_rgba(0,0,0,0.35)]
+                    className={`max-w-100 w-full p-5 shadow-[0_5px_15px_rgba(0,0,0,0.35)]
                   rounded-[10px] ${darkMode ? "bg-white text-black" : "bg-black text-white"}`}
                 >
                     <h2 className="mb-3 text-lg font-medium">Register</h2>
