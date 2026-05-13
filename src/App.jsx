@@ -7,6 +7,7 @@ import Register from "./components/Register/Register";
 import Dashborad from './Screens/Dashboard/Dashborad';
 import { useAuth } from './utils/AuthContext';
 import AuthHoc from './utils/AuthHoc';
+import PageNotFound from './components/Error/PageNotFound';
 
 const App = () => {
   const { darkMode } = useTheme();
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/" element={user ? <Navigate to={'/dashboard'} /> : <Login />} />
         <Route path="/register" element={user ? <Navigate to={'/dashboard'} /> : <Register />} />
         <Route path="/dashboard" element={<AuthHoc children={<Dashborad />} />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   )
