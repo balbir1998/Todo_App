@@ -2,10 +2,11 @@ import { useTheme } from "../../utils/ThemeContext";
 import InputField from "../InputField/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../utils/firebaseConfig";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../../utils/firebaseConfig";
 import Loader from './../Loader/Loader';
 import { BounceLoader } from 'react-spinners';
+import GoogleIcon from '@mui/icons-material/Google';
 
 const Login = () => {
     const { darkMode } = useTheme();
@@ -37,13 +38,28 @@ const Login = () => {
         }
     }
 
+    const handleGoogleLogin = async () => {
+        try {
+            const userCred = await signInWithPopup(auth, googleProvider);
+            const { user } = userCred;
+
+            // console.log(userCred);
+            // console.log(user);
+
+            navigate("/dashboard");
+        } catch (err) {
+            console.error(err);
+            alert(err.message);
+        }
+    }
+
     return (
         <>
             {loading && <Loader />}
-            <div className="px-4 py-5 flex justify-center items-center">
+            <div className="px-4 mt-20 flex justify-center">
                 <form
                     onSubmit={handleLogin}
-                    className={`max-w-100 w-full my-25 p-5 shadow-[0_5px_15px_rgba(0,0,0,0.35)]
+                    className={`max-w-100 w-ful p-5 shadow-[0_5px_15px_rgba(0,0,0,0.35)]
             rounded-[10px] ${darkMode ? "bg-white text-black" : "bg-black text-white"}`}
                 >
                     <h2 className="mb-3 text-lg font-medium">Login</h2>
@@ -64,10 +80,21 @@ const Login = () => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
 
-                    <button className={`w-full rounded-[10px] p-3.75 text-lg tracking-wider
+                    <button className={`mb-3 w-full rounded-[10px] p-3.75 text-lg tracking-wider
                  font-medium cursor-pointer ${darkMode ? "bg-black text-white" : "bg-white text-black"}`}
                     >
                         Login
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={handleGoogleLogin}
+                        className={`w-full rounded-[10px] p-3.75 text-lg
+                             tracking-wider font-medium cursor-pointer
+                             ${darkMode ? "bg-black text-white" : "bg-white text-black"}`
+                        }
+                    >
+                        <GoogleIcon /> Login with Google
                     </button>
 
                     <Link to="/register" className="mt-2 inline-block hover:underline underline-offset-2">
