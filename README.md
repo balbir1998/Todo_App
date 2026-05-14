@@ -90,8 +90,8 @@ Todo_App/
 │
 ├── src/
 │   ├── assets/
-│   ├── components/Dashboard
-│   ├── screens/
+│   ├── components/
+│   ├── screens/Dashboard/
 │   ├── utils/
 │   ├── App.jsx
 │   ├── main.jsx
